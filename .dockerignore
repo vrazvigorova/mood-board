@@ -1,0 +1,17 @@
+# Never send these to Docker — saves huge amounts of build context time
+node_modules
+.next
+.git
+.env
+*.md
+
+# DB artifacts — not needed in the image
+drizzle
+db/migrations
+db/seed.ts
+
+# Dev config
+.eslintrc*
+*.config.js
+*.config.ts
+!next.config.ts

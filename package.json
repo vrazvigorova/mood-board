@@ -3,24 +3,44 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:next\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:server": "ts-node --project tsconfig.server.json -r tsconfig-paths/register server/index.ts",
+    "dev:next": "next dev",
+    "db:seed": "tsx db/seed.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx db/run-migrations.ts",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@apollo/client": "^4.2.0",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "graphql": "^16.14.0",
+    "graphql-yoga": "^5.21.0",
     "next": "16.2.6",
+    "pg": "^8.21.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "tsx": "^4.21.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "drizzle-kit": "^0.30.5",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5"
   }
 }
