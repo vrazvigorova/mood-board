@@ -9,10 +9,10 @@
     "lint": "eslint",
     "dev:server": "ts-node --project tsconfig.server.json -r tsconfig-paths/register server/index.ts",
     "dev:next": "next dev",
+    "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
     "db:seed": "tsx db/seed.ts",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "tsx db/run-migrations.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio --config=drizzle.config.ts"
   },
   "dependencies": {
     "@apollo/client": "^4.2.0",
