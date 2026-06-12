@@ -1,0 +1,20 @@
+services:
+  next:
+    build: null
+    image: node:20-alpine
+    command: sh -c "npm install && npm run dev:next"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
+    environment:
+      DATABASE_URL: postgres://postgres:secret@db:5432/mood_board
+
+  server:
+    build: null
+    image: node:20-alpine
+    command: sh -c "npm install && npx tsx server/index.ts"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    working_dir: /app
