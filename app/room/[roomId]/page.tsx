@@ -4,7 +4,7 @@ import { ParticipantsList } from "@/components/ParticipantsList";
 import { EmojiHistory } from "@/components/EmojiHistory";
 import { MoodBoard } from "@/components/MoodBoard";
 import { RoomInfoSkeleton } from "@/components/skeletons/RoomInfoSkeleton";
-import { ParticipantsSkeleton } from "@/components/skeletons/ParticipantsSkeleton";
+import { ParticipantsSkeleton } from "@/components/skeletons/Participants Skeleton";
 import { HistorySkeleton } from "@/components/skeletons/HistorySkeleton";
 interface PageProps {
   params: Promise<{ roomId: string }>;

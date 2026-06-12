@@ -1,6 +1,6 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY . . 
 RUN npm ci
 
 FROM node:20-alpine AS builder
@@ -22,3 +22,10 @@ USER node
 
 EXPOSE 3000
 CMD ["node", "server.js"]
+
+## Build 1 — cold
+# docker build -f docker/Dockerfile -t mood-board:test . --progress=plain
+
+# Change any .tsx file (just add a space)
+# Build 2 — watch npm ci re-run despite no package changes
+# docker build -f docker/Dockerfile -t mood-board:test . --progress=plain

@@ -1,5 +1,5 @@
 import { RoomInfoSkeleton } from "@/components/skeletons/RoomInfoSkeleton";
-import { ParticipantsSkeleton } from "@/components/skeletons/ParticipantsSkeleton";
+import { ParticipantsSkeleton } from "@/components/skeletons/Participants Skeleton";
 import { HistorySkeleton } from "@/components/skeletons/HistorySkeleton";
 export default function Loading() {
   return (
