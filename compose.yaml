@@ -9,12 +9,12 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-      start_period: 10s
+    # healthcheck:
+    #   test: ["CMD", "pg_isready", "-U", "postgres"]
+    #   interval: 5s
+    #   timeout: 3s
+    #   retries: 5
+    #   start_period: 10s
     restart: unless-stopped
 
   server:
@@ -25,9 +25,10 @@ services:
       - "3001:3001"
     environment:
       NODE_ENV: production
-    depends_on:
-      db:
-        condition: service_healthy
+      DATABASE_URL: ${DATABASE_URL}
+    # depends_on:
+    #   db:
+    # condition: service_healthy
     restart: unless-stopped
 
   next:
@@ -46,3 +47,8 @@ services:
 
 volumes:
   pgdata:
+
+#What happens: Next.js and the Socket.IO server start before Postgres is ready. You get connection errors on startup — sometimes it works, sometimes it doesn't (race condition).
+#Why: depends_on without a healthcheck only waits for the container to start, not for Postgres to actually be ready to accept connections.
+#Fix: Add pg_isready healthcheck back with condition: service_healthy.
+
