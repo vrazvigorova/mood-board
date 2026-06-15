@@ -25,7 +25,7 @@ services:
       - "3001:3001"
     environment:
       NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgres://postgres:secret@localhost:5432/mood_board
     depends_on:
       db:
         condition: service_healthy
@@ -47,3 +47,7 @@ services:
 
 volumes:
   pgdata:
+
+# BUG: localhost inside a container means the container itself
+# not the db service — use the service name 'db' instead
+# when I try to open the logs with docker compose logs of the container it is empty or Error: connect ECONNREFUSED 127.0.0.1:5432
