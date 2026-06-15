@@ -25,4 +25,4 @@ CMD ["node", "server.js"]
 
 #Issue:Missing USER node from both Dockerfiles.
 #What happens: App runs as root inside the container — a security vulnerability.
-#Verified with docker exec -it mood-board-next-1 whoami
+#Verified with docker exec -it mood-board-next-1 whoami -> we see root and that's a problem
