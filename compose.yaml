@@ -16,6 +16,8 @@ services:
       retries: 5
       start_period: 10s
     restart: unless-stopped
+    networks:
+      - backend
 
   server:
     build:
@@ -25,10 +27,13 @@ services:
       - "3001:3001"
     environment:
       NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
       db:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - frontend # ← server can't reach db
 
   next:
     build:
@@ -43,6 +48,17 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - frontend # ← next can't reach db either
 
 volumes:
   pgdata:
+
+networks:
+  frontend:
+  backend:
+
+#CHeck logs with docker compose logs next | grep -i "error\|connect\|refused"
+#check with docker exec -it mood-board-next-1 sh  and ping db and we get bad address db
+# to fix use only the same network backed
+
