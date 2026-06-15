@@ -25,20 +25,29 @@ services:
       - "3001:3001"
     environment:
       NODE_ENV: production
+    deploy:
+      resources:
+        limits:
+          memory: 50m # ← very low so leak is obvious fast
+        reservations:
+          memory: 10m # ← guaranteed minimum
     depends_on:
       db:
         condition: service_healthy
-    restart: unless-stopped
+    restart: unless-stopped # ← container auto-restarts when OOM killed
 
   next:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
     ports:
       - "3000:3000"
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DOCKER_DATABASE_URL}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
     depends_on:
       db:
         condition: service_healthy
@@ -46,3 +55,33 @@ services:
 
 volumes:
   pgdata:
+
+# EXERCISE: docker-memory-leak
+# The server service has a 50MB memory limit.
+# The Socket.IO server allocates 1MB on every connection and never frees it.
+#
+# HOW TO REPRODUCE:
+#   1. docker compose up -d --build
+#   2. docker stats  ← watch server memory climb
+#   3. Open many browser tabs at localhost:3000/room/abc
+#   4. Watch the server container get OOM killed and restart
+#
+# INVESTIGATE:
+#   docker inspect mood-board-server-1 | grep OOMKilled
+#   docker inspect mood-board-server-1 | grep RestartCount
+#   docker compose logs server | tail -20
+#
+# WHY: Each Socket.IO connection allocates 1MB into a global array.
+# The array is never cleaned up — memory grows until Docker kills the container.
+#
+# FIX is to:
+#   1. Clean up leak on disconnect in server/index.ts
+#   2. Set a reasonable memory limit (512m not 50m) in compose.yaml
+
+# 1. Memory leaks in Node.js come from global state that never gets cleaned up
+# 2. Docker resource limits (memory: 50m) protect the host from runaway containers
+# 3. OOMKilled = container was killed because it exceeded memory limit
+# 4. restart: unless-stopped = container auto-recovers but leak starts again
+# 5. Always clean up resources on disconnect/close events
+# 6. docker stats is your real-time monitoring tool for container resources
+# 7. docker inspect reveals OOMKilled and RestartCount after the fact
