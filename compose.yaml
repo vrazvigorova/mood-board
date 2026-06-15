@@ -7,8 +7,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 5s
@@ -25,6 +25,7 @@ services:
       - "3001:3001"
     environment:
       NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       db:
         condition: service_healthy
@@ -44,5 +45,9 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
-volumes:
-  pgdata:
+# volumes:
+#   pgdata:
+
+#What happens: Run the app, seed the DB, add some emoji drops, then docker compose down and docker compose up again. All data is gone.
+#Why: Without a named volume Postgres stores data inside the container's writable layer — destroyed on docker compose down.
+#Fix: Add the named volume back. This is one of the three most common real Docker mistakes.
