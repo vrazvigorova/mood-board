@@ -22,10 +22,9 @@ docker ps
 5. Ping by IP instead of name
    DB_IP=$(docker inspect mood-board-db-1 --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
 
-   docker exec -it mood-board-next-1 ping $DB_IP -c 4
+   docker exec -it mood-board-next-1 ping 172.18.0.2 -c 4
 
    exit
 
 6. Check what Postgres is listening on
-   docker exec -it mood-board-db-1 sh
-   netstat -tlnp | grep 5432
+   docker exec -it mood-board-db-1 sh -c "cat /proc/net/tcp6" or docker port mood-board-db-1
