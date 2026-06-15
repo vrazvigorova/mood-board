@@ -11,7 +11,7 @@
     "dev:next": "next dev",
     "db:seed": "tsx db/seed.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate --config ./drizzle.config.ts",
+    "db:migrate": "tsx db/run-migrations.ts",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
