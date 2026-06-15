@@ -33,8 +33,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     networks:
-      - frontend
-      - backend
+      - frontend # ← server can't reach db
 
   next:
     build:
@@ -50,8 +49,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     networks:
-      - frontend
-      - backend
+      - frontend # ← next can't reach db either
 
 volumes:
   pgdata:
@@ -60,6 +58,6 @@ networks:
   frontend:
   backend:
 
-#What you see: ECONNREFUSED again — but this time it's a network isolation issue, not a hostname issue.
-#Fix: Add db to both networks, or put everything on the same network.
+#CHeck logs with docker compose logs next | grep -i "error\|connect\|refused"
+#check with docker exec -it mood-board-next-1 sh  and ping db and we get bad address db
 
