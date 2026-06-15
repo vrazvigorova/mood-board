@@ -13,6 +13,7 @@ export function useSocketIO(roomId: string) {
   useEffect(() => {
     const socket: AppSocket = io("http://localhost:3001", {
       transports: ["websocket"],
+      withCredentials: true,
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
