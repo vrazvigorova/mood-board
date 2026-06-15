@@ -34,11 +34,14 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        - NEXT_PUBLIC_APP_URL=http://localhost:3000
     ports:
       - "3000:3000"
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DOCKER_DATABASE_URL}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
     depends_on:
       db:
         condition: service_healthy
@@ -46,3 +49,19 @@ services:
 
 volumes:
   pgdata:
+
+#Browser requests /room/abc
+#    ↓
+#next container receives the request
+#    ↓
+#Server Component runs gqlFetch()
+#    ↓
+#gqlFetch checks: typeof window === 'undefined' → true (server side)
+#    ↓
+#uses process.env.NEXT_PUBLIC_APP_URL = http://localhost:3000
+#    ↓
+#fetches http://localhost:3000/api/graphql
+#    ↓
+#inside the container localhost:3000 = itself ✅
+#    ↓
+#GraphQL resolves, data comes back ✅
