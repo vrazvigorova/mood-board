@@ -11,10 +11,10 @@ services:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-      start_period: 10s
+      interval: 1s # ← check every 1 second (too aggressive)
+      timeout: 1s # ← give up after 1 second (too short)
+      retries: 1 # ← only try once (too few)
+      start_period: 1s # ← only wait 1 second before starting checks (too short)
     restart: unless-stopped
 
   server:
