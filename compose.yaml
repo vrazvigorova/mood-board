@@ -60,4 +60,5 @@ networks:
 
 #CHeck logs with docker compose logs next | grep -i "error\|connect\|refused"
 #check with docker exec -it mood-board-next-1 sh  and ping db and we get bad address db
+# to fix use only the same network backed
 
