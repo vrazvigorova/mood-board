@@ -9,7 +9,11 @@ COPY types/ ./types/
 COPY tsconfig.server.json ./
 
 # Never run as root
-USER node
+# USER node
 
 EXPOSE 3001
 CMD ["npx", "tsx", "server/index.ts"]
+
+#Issue:Missing USER node from both Dockerfiles.
+#What happens: App runs as root inside the container — a security vulnerability.
+#Verified with docker exec -it mood-board-next-1 whoami
